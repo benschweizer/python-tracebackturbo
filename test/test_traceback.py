@@ -102,7 +102,7 @@ def test():
             try:
                 test_bug737473.test()
             except NotImplementedError:
-                src = traceback.extract_tb(sys.exc_traceback)[-1][-1]
+                src = traceback.extract_tb(sys.exc_traceback)[-1][-2]
                 self.assertEqual(src, 'raise NotImplementedError')
         finally:
             sys.path[:] = savedpath
@@ -158,6 +158,22 @@ def test():
         err = traceback.format_exception_only(None, None)
         self.assertEqual(err, ['None\n'])
 
+    def test_format_vars(self):
+        err = traceback.format_vars([
+            ('bstr', 'binary string'),
+            ('ustr', u'unicode string'),
+            ('int', 5),
+            ('float', 5.23),
+            ('function', lambda x: x),
+        ])
+        bstr, ustr, int, float, function = err.splitlines()
+        self.assertTrue(bstr.startswith('      bstr = "binary string"'))
+        self.assertTrue(ustr.startswith('      ustr = u"unicode string"'))
+        self.assertTrue(int.startswith('      int = 5'))
+        self.assertTrue(float.startswith('      float = 5.23'))
+        self.assertTrue(function.startswith('      function = <function <lambda> at '))
+        self.assertEqual(type(err), type(""))
+
 
 class TracebackFormatTests(unittest.TestCase):
 
@@ -183,6 +199,25 @@ class TracebackFormatTests(unittest.TestCase):
         banner, location, source_line = tb_lines
         self.assertTrue(banner.startswith('Traceback'))
         self.assertTrue(location.startswith('  File'))
+        self.assertTrue(source_line.startswith('    raise'))
+
+    def test_traceback_format_with_vars(self):
+        try:
+            raise KeyError('blah')
+        except KeyError:
+            type_, value, tb = sys.exc_info()
+            traceback_fmt = 'Traceback (most recent call last):\n' + \
+                            ''.join(traceback.format_tb(tb, with_vars=True))
+        else:
+            raise Error("unable to create test traceback string")
+
+        # Make sure that the traceback is properly indented.
+        tb_lines = traceback_fmt.splitlines()
+        self.assertEquals(len(tb_lines), 8)
+        banner, location, variables, var1, var2, var3, var4, source_line = tb_lines
+        self.assertTrue(banner.startswith('Traceback'))
+        self.assertTrue(location.startswith('  File'))
+        self.assertTrue(variables.startswith('    Local variables'))
         self.assertTrue(source_line.startswith('    raise'))
 
 
