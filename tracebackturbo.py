@@ -57,7 +57,7 @@ def format_vars(vars, width=72):
         result += var + "\n"
     return result
 
-def print_list(extracted_list, file=None, with_vars=False):
+def print_list(extracted_list, file=None, with_vars=True):
     """Print the list of tuples as returned by extract_tb() or
     extract_stack() as a formatted stack trace to the given file."""
     if file is None:
@@ -67,11 +67,11 @@ def print_list(extracted_list, file=None, with_vars=False):
                '  File "%s", line %d, in %s' % (filename,lineno,name))
         if with_vars:
             _print(file, '    Local variables:')
-            print_vars(locals, file=file)
+            print_vars(sorted(locals), file=file)
         if line:
             _print(file, '    %s' % line.strip())
 
-def format_list(extracted_list, with_vars=False):
+def format_list(extracted_list, with_vars=True):
     """Format a list of traceback entry tuples for printing.
 
     Given a list of tuples as returned by extract_tb() or
@@ -86,14 +86,14 @@ def format_list(extracted_list, with_vars=False):
         item = '  File "%s", line %d, in %s\n' % (filename,lineno,name)
         if with_vars:
             item += '    Local variables:\n'
-            item += format_vars(locals)
+            item += format_vars(sorted(locals))
         if line:
-            item += '    %s\n' % line.strip()
+            item = item + '    %s\n' % line.strip()
         list.append(item)
     return list
 
 
-def print_tb(tb, limit=None, file=None, with_vars=False):
+def print_tb(tb, limit=None, file=None, with_vars=True):
     """Print up to 'limit' stack trace entries from the traceback 'tb'.
 
     If 'limit' is omitted or None, all entries are printed.  If 'file'
@@ -120,7 +120,7 @@ def print_tb(tb, limit=None, file=None, with_vars=False):
         locals = f.f_locals.items()
         if with_vars:
             _print(file, '    Local variables:')
-            print_vars(locals)
+            print_vars(sort(locals))
         if line:
             _print(file, '    ' + line.strip())
         tb = tb.tb_next
@@ -267,8 +267,14 @@ def _format_final_exc_line(etype, value):
 def _some_str(value):
     try:
         return str(value)
-    except:
-        return '<unprintable %s object>' % type(value).__name__
+    except Exception:
+        pass
+    try:
+        value = unicode(value)
+        return value.encode("ascii", "backslashreplace")
+    except Exception:
+        pass
+    return '<unprintable %s object>' % type(value).__name__
 
 
 def print_exc(limit=None, file=None):

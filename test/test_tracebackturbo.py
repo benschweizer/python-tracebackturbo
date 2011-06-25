@@ -6,7 +6,7 @@ import sys
 import unittest
 from test.test_support import run_unittest, is_jython, Error
 
-import traceback
+import tracebackturbo as traceback
 
 
 class TracebackCases(unittest.TestCase):
