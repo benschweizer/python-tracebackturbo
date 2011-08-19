@@ -126,7 +126,7 @@ def print_tb(tb, limit=None, file=None, with_vars=True):
         tb = tb.tb_next
         n = n+1
 
-def format_tb(tb, limit = None, with_vars=False):
+def format_tb(tb, limit = None, with_vars=True):
     """A shorthand for 'format_list(extract_stack(f, limit))."""
     return format_list(extract_tb(tb, limit), with_vars)
 
@@ -163,7 +163,7 @@ def extract_tb(tb, limit = None):
     return list
 
 
-def print_exception(etype, value, tb, limit=None, file=None, with_vars=False):
+def print_exception(etype, value, tb, limit=None, file=None, with_vars=True):
     """Print exception up to 'limit' stack trace entries from 'tb' to 'file'.
 
     This differs from print_tb() in the following ways: (1) if
@@ -177,13 +177,13 @@ def print_exception(etype, value, tb, limit=None, file=None, with_vars=False):
     if file is None:
         file = sys.stderr
     if tb:
-        _print(file, 'Traceback (most recent call last):')
+        _print(file, 'Traceback Turbo (most recent call last):')
         print_tb(tb, limit, file, with_vars)
     lines = format_exception_only(etype, value)
     for line in lines:
         _print(file, line, '')
 
-def format_exception(etype, value, tb, limit = None, with_vars=False):
+def format_exception(etype, value, tb, limit = None, with_vars=True):
     """Format a stack trace and the exception information.
 
     The arguments have the same meaning as the corresponding arguments
@@ -193,7 +193,7 @@ def format_exception(etype, value, tb, limit = None, with_vars=False):
     printed as does print_exception().
     """
     if tb:
-        list = ['Traceback (most recent call last):\n']
+        list = ['Traceback Turbo (most recent call last):\n']
         list = list + format_tb(tb, limit, with_vars)
     else:
         list = []
@@ -290,7 +290,7 @@ def print_exc(limit=None, file=None):
         etype = value = tb = None
 
 
-def format_exc(limit=None, with_vars=False):
+def format_exc(limit=None, with_vars=True):
     """Like print_exc() but return a string."""
     try:
         etype, value, tb = sys.exc_info()
@@ -310,7 +310,7 @@ def print_last(limit=None, file=None):
                     limit, file)
 
 
-def print_stack(f=None, limit=None, file=None, with_vars=False):
+def print_stack(f=None, limit=None, file=None, with_vars=True):
     """Print a stack trace from its invocation point.
 
     The optional 'f' argument can be used to specify an alternate
@@ -326,7 +326,7 @@ def print_stack(f=None, limit=None, file=None, with_vars=False):
         file = sys.stderr
     print_list(extract_stack(f, limit), file, with_vars)
 
-def format_stack(f=None, limit=None, with_vars=False):
+def format_stack(f=None, limit=None, with_vars=True):
     """Shorthand for 'format_list(extract_stack(f, limit))'."""
     if f is None:
         try:
