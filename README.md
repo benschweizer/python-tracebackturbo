@@ -1,7 +1,8 @@
 tracebackturbo
 ==============
-This is an improved Python [traceback module][http://docs.python.org/library/traceback.html]
-which logs variables from the local scope next to the affected code.
+This is an improved [traceback module](http://docs.python.org/library/traceback.html)
+for Python. When logging stack traces, it dumps the local variable scope aside
+the normal stack trace.
 
 Usage
 -----
@@ -13,7 +14,7 @@ def erroneous_function():
     eggs = "binary string with umlauts äöü."
     i = 23
     if i>5:
-        raise Exception("it's true!")
+        raise Exception("it's a trap!")
 
 try:
     erroneous_function()
@@ -40,9 +41,14 @@ Traceback (most recent call last):
       eggs = "binary string with umlauts \xc3\xa4\xc3\xb6\xc3\xbc."
       ham = u"unicode string with umlauts ???."
       i = 23
-    raise Exception("it's true!")
-Exception: it's true!
+    raise Exception("it's a trap!")
+Exception: it's a trap!
 ```
+
+License & Credit
+-----------------
+This code is based upon the original traceback module that ships with stock
+python. This modules used the [Python License](http://www.opensource.org/licenses/Python-2.0).
 
 Links
 -----
