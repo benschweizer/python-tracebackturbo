@@ -120,7 +120,7 @@ def print_tb(tb, limit=None, file=None, with_vars=True):
         locals = f.f_locals.items()
         if with_vars:
             _print(file, '    Local variables:')
-            print_vars(sort(locals))
+            print_vars(sorted(locals), file=file)
         if line:
             _print(file, '    ' + line.strip())
         tb = tb.tb_next
