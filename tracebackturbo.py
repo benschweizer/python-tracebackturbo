@@ -16,8 +16,10 @@ __all__ = ['extract_stack', 'extract_tb', 'format_exception',
            'print_last', 'print_stack', 'print_tb', 'tb_lineno',
            'print_vars', 'format_vars']
 
+
 def _print(file, str='', terminator='\n'):
-    file.write(str+terminator)
+    file.write(str + terminator)
+
 
 def print_vars(vars, width=72, file=None):
     """Print a list of variables as given by globals.items()"""
@@ -27,16 +29,17 @@ def print_vars(vars, width=72, file=None):
     for key, value in vars:
         var = '      '
         if isinstance(value, str):
-            value = '"'+value.encode("string_escape")+'"'
+            value = '"' + value.encode("string_escape") + '"'
         if isinstance(value, unicode):
-            value = 'u"'+value.encode(sys.getdefaultencoding(), 'replace').encode("string_escape")+'"'
+            value = 'u"' + value.encode(sys.getdefaultencoding(), 'replace').encode("string_escape") + '"'
         try:
             var += "%s = %s" % (key, value)
         except Exception, e:
             var += "%s = %s" % (key, type(value))
         if len(var) > width:
-            var = var[:width-3] + '...'
+            var = var[: width - 3] + '...'
         _print(file, var)
+
 
 def format_vars(vars, width=72):
     """Format a list of variables, arguments are like print_vars"""
@@ -45,17 +48,18 @@ def format_vars(vars, width=72):
     for key, value in vars:
         var = '      '  # fixed indentation
         if isinstance(value, str):
-            value = '"'+value.encode("string_escape")+'"'
+            value = '"' + value.encode("string_escape") + '"'
         if isinstance(value, unicode):
-            value = 'u"'+value.encode(sys.getdefaultencoding(), 'replace').encode("string_escape")+'"'
+            value = 'u"' + value.encode(sys.getdefaultencoding(), 'replace').encode("string_escape") + '"'
         try:
             var += "%s = %s" % (key, value)
         except:
             var += "%s = %s" % (key, type(value))
         if len(var) > width:
-            var = var[:width-3] + '...'
+            var = var[: width - 3] + '...'
         result += var + "\n"
     return result
+
 
 def print_list(extracted_list, file=None, with_vars=True):
     """Print the list of tuples as returned by extract_tb() or
@@ -64,12 +68,13 @@ def print_list(extracted_list, file=None, with_vars=True):
         file = sys.stderr
     for filename, lineno, name, line, locals in extracted_list:
         _print(file,
-               '  File "%s", line %d, in %s' % (filename,lineno,name))
+            '  File "%s", line %d, in %s' % (filename, lineno, name))
         if with_vars:
             _print(file, '    Local variables:')
             print_vars(sorted(locals), file=file)
         if line:
             _print(file, '    %s' % line.strip())
+
 
 def format_list(extracted_list, with_vars=True):
     """Format a list of traceback entry tuples for printing.
@@ -83,12 +88,12 @@ def format_list(extracted_list, with_vars=True):
     """
     list = []
     for filename, lineno, name, line, locals in extracted_list:
-        item = '  File "%s", line %d, in %s\n' % (filename,lineno,name)
+        item = '  File "%s", line %d, in %s\n' % (filename, lineno, name)
         if with_vars:
             item += '    Local variables:\n'
             item += format_vars(sorted(locals))
         if line:
-            item = item + '    %s\n' % line.strip()
+            item += '    %s\n' % line.strip()
         list.append(item)
     return list
 
@@ -114,7 +119,7 @@ def print_tb(tb, limit=None, file=None, with_vars=True):
         filename = co.co_filename
         name = co.co_name
         _print(file,
-               '  File "%s", line %d, in %s' % (filename, lineno, name))
+            '  File "%s", line %d, in %s' % (filename, lineno, name))
         linecache.checkcache(filename)
         line = linecache.getline(filename, lineno, f.f_globals)
         locals = f.f_locals.items()
@@ -124,13 +129,15 @@ def print_tb(tb, limit=None, file=None, with_vars=True):
         if line:
             _print(file, '    ' + line.strip())
         tb = tb.tb_next
-        n = n+1
+        n += 1
 
-def format_tb(tb, limit = None, with_vars=True):
+
+def format_tb(tb, limit=None, with_vars=True):
     """A shorthand for 'format_list(extract_stack(f, limit))."""
     return format_list(extract_tb(tb, limit), with_vars)
 
-def extract_tb(tb, limit = None):
+
+def extract_tb(tb, limit=None):
     """Return list of up to limit pre-processed entries from traceback.
 
     This is useful for alternate formatting of stack traces.  If
@@ -154,12 +161,14 @@ def extract_tb(tb, limit = None):
         name = co.co_name
         linecache.checkcache(filename)
         line = linecache.getline(filename, lineno, f.f_globals)
-        if line: line = line.strip()
-        else: line = None
+        if line:
+            line = line.strip()
+        else:
+            line = None
         locals = f.f_locals.items()
         list.append((filename, lineno, name, line, locals))
         tb = tb.tb_next
-        n = n+1
+        n += 1
     return list
 
 
@@ -183,7 +192,8 @@ def print_exception(etype, value, tb, limit=None, file=None, with_vars=True):
     for line in lines:
         _print(file, line, '')
 
-def format_exception(etype, value, tb, limit = None, with_vars=True):
+
+def format_exception(etype, value, tb, limit=None, with_vars=True):
     """Format a stack trace and the exception information.
 
     The arguments have the same meaning as the corresponding arguments
@@ -199,6 +209,7 @@ def format_exception(etype, value, tb, limit = None, with_vars=True):
         list = []
     list = list + format_exception_only(etype, value)
     return list
+
 
 def format_exception_only(etype, value):
     """Format the exception part of a traceback.
@@ -255,6 +266,7 @@ def format_exception_only(etype, value):
     lines.append(_format_final_exc_line(stype, value))
     return lines
 
+
 def _format_final_exc_line(etype, value):
     """Return a list of a single line -- normal case for format_exception_only"""
     valuestr = _some_str(value)
@@ -263,6 +275,7 @@ def _format_final_exc_line(etype, value):
     else:
         line = "%s: %s\n" % (etype, valuestr)
     return line
+
 
 def _some_str(value):
     try:
@@ -307,7 +320,7 @@ def print_last(limit=None, file=None):
     if file is None:
         file = sys.stderr
     print_exception(sys.last_type, sys.last_value, sys.last_traceback,
-                    limit, file)
+        limit, file)
 
 
 def print_stack(f=None, limit=None, file=None, with_vars=True):
@@ -326,6 +339,7 @@ def print_stack(f=None, limit=None, file=None, with_vars=True):
         file = sys.stderr
     print_list(extract_stack(f, limit), file, with_vars)
 
+
 def format_stack(f=None, limit=None, with_vars=True):
     """Shorthand for 'format_list(extract_stack(f, limit))'."""
     if f is None:
@@ -335,7 +349,8 @@ def format_stack(f=None, limit=None, with_vars=True):
             f = sys.exc_info()[2].tb_frame.f_back
     return format_list(extract_stack(f, limit), with_vars)
 
-def extract_stack(f=None, limit = None):
+
+def extract_stack(f=None, limit=None):
     """Extract the raw traceback from the current stack frame.
 
     The return value has the same format as for extract_tb().  The
@@ -361,14 +376,17 @@ def extract_stack(f=None, limit = None):
         name = co.co_name
         linecache.checkcache(filename)
         line = linecache.getline(filename, lineno, f.f_globals)
-        if line: line = line.strip()
-        else: line = None
+        if line:
+            line = line.strip()
+        else:
+            line = None
         locals = f.f_locals.items()
         list.append((filename, lineno, name, line, locals))
         f = f.f_back
-        n = n+1
+        n += 1
     list.reverse()
     return list
+
 
 def tb_lineno(tb):
     """Calculate correct line number of traceback given in tb.
