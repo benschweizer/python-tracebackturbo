@@ -45,6 +45,14 @@ Traceback (most recent call last):
 Exception: it's a trap!
 ```
 
+Setup
+-----
+To setup tracebackturbo, simply drop the script in your working directory or
+install the egg from pypi:
+```
+$ pip install tracebackturbo
+```
+
 License & Credit
 -----------------
 This code is based upon the original traceback module that ships with stock
