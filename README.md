@@ -25,7 +25,7 @@ except:
 Sample Output
 -------------
 ```
-Traceback (most recent call last):
+Traceback Turbo (most recent call last):
   File "test.py", line 11, in 
     Local variables:
       __builtins__ = 
