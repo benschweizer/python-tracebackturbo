@@ -8,6 +8,8 @@ if not '2.6' <= sys.version < '3.0':
 
 setup(name="tracebackturbo",
       version=version,
+      maintainer="Benjamin Schweizer",
+      maintainer_email="cxcv@cxcv.de",
       description="Patched version of traceback, also dumps local and global scope vars.",
       classifiers=["Intended Audience :: Developers",
                    "License :: OSI Approved :: Python Software Foundation License",

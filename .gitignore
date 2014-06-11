@@ -1,2 +1,6 @@
 
 .idea
+build
+dist
+tracebackturbo.egg-info
+*.pyc
