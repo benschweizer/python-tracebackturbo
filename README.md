@@ -1,12 +1,11 @@
 tracebackturbo
 ==============
-This is an improved [traceback module](http://docs.python.org/library/traceback.html)
-for Python. When logging stack traces, it dumps the local variable scope aside
-the normal stack trace.
+A drop-in replacement for the python2 [traceback module](http://docs.python.org/library/traceback.html)
+that dumps the local variable scope aside normal stack traces.
 
 Usage
 -----
-``` python
+```python
 import tracebackturbo as traceback
 
 def erroneous_function():
@@ -24,6 +23,7 @@ except:
 
 Sample Output
 -------------
+This is the output of tracebackturbo:
 ```
 Traceback Turbo (most recent call last):
   File "test.py", line 11, in 
@@ -45,6 +45,16 @@ Traceback Turbo (most recent call last):
 Exception: it's a trap!
 ```
 
+versus the normal output:
+```
+Traceback Turbo (most recent call last):
+  File "test.py", line 11, in 
+    erroneous_function()
+  File "test.py", line 8, in erroneous_function
+    raise Exception("it's a trap!")
+Exception: it's a trap!
+```
+
 Setup
 -----
 To setup tracebackturbo, simply drop the script in your working directory or
@@ -53,11 +63,14 @@ install the egg from pypi:
 $ pip install tracebackturbo
 ```
 
+Python3
+-------
+Since python3.5, there's a new TracebackException class that implements
+similar functionality, see [https://bugs.python.org/issue17911](https://bugs.python.org/issue17911).
+Since the control variable capture_local is not yet published as of of python3.6, 
+you can use this patched version: https://github.com/cxcv/python-tracebackturbo3
+
 License & Credit
 -----------------
 This code is based upon the original traceback module that ships with stock
 python. This modules used the [Python License](http://www.opensource.org/licenses/Python-2.0).
-
-Links
------
-http://benjamin-schweizer.de/improved-python-traceback-module.html
